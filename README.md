@@ -1,2 +1,2 @@
-# flaskapi-python-102
+# flaskapi-python-101
 a rudimentary flask based python api.
