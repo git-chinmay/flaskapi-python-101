@@ -1,4 +1,3 @@
-from regex import F
 from flask import Flask, request
 from flask_restful import Api
 from flask_jwt import JWT
@@ -6,10 +5,18 @@ from security import authentication, identity
 from resources.user import UserRegistration
 from resources.item import Item, ItemList
 from resources.store import Store, StoreLists
+import os
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+
+# It will fetch DATABASE_URL value from Heroku, for local testing it will use sqlite
+# Hence two parameters
+# As Heroku dashboard not allowing the edit the conenction string we need to copy it to code and 
+# modify the postgres:// into postgresql:// locally.
+HEROKU_POSTGRE_DATABASE_URL = {"DATABASE_URL":"postgresql://uxxiqujuagnrsa:8075ab80c66bd7f88bd055cc3cf0bd691246439f88be2d90c32e2c8266cf06df@ec2-107-22-238-112.compute-1.amazonaws.com:5432/d2c7od2787c875"}
+#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///database.db') 
+app.config['SQLALCHEMY_DATABASE_URI'] = HEROKU_POSTGRE_DATABASE_URL.get('DATABASE_URL', 'sqlite:///database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Will use this key to encrypt the data with JWT
